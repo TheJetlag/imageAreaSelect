@@ -19,7 +19,7 @@ angular.module('starter', ['ionic'])
 })
 
 .controller('MyCtrl', function($scope, $timeout, $ionicGesture, $window) {
-  // arrays to store the click/drag coordinates
+  // arrays to store the click / drag coordinates
   var clicksX = new Array();
   var clicksY = new Array();
 
@@ -40,17 +40,17 @@ angular.module('starter', ['ionic'])
     var imageHeight = this.height;
     var imageWidth = this.width;
 
-    var scale = viewportWidth / imageWidth;
     // look if we have to downscale the image
     var scale = 1;
     if (viewportWidth < imageWidth) {
       scale = viewportWidth / imageWidth;
     }
 
+    // downscale the image by the calculated factor
     var newImageWidth = Math.floor(imageWidth * scale);
     var newImageHeight = Math.floor(imageHeight * scale);
 
-    // rescale the canvasDiv
+    // also downscale the canvasDiv
     $(canvasDiv).css("width", newImageWidth+"px");
     $(canvasDiv).css("height", newImageHeight+"px");
 
@@ -64,7 +64,6 @@ angular.module('starter', ['ionic'])
 
   imageObj.src = getPhoneGapPath() + '/img/darth-vader.jpg';
 
-
   var restoreImage = function() {
     var img = new Image();
     img.onload = function () {
@@ -73,10 +72,8 @@ angular.module('starter', ['ionic'])
     img.src = restoreableImg;
   }
 
-
-  var lastDeltaTime = 0;
-
   // draggin
+  var lastDeltaTime = 0;
   $ionicGesture.on('drag', function(e) {
     var deltaTime = e.gesture.deltaTime;
 
@@ -87,12 +84,10 @@ angular.module('starter', ['ionic'])
       clicksY = new Array();
       restoreImage();
     }
-
     lastDeltaTime = deltaTime;
 
     var target = e.target.id;
     var source = e.srcElement.id;
-
     var x = e.gesture.touches[0].pageX - $(canvas).offset().left; // so we get the position inside the canvas (not of the whole screen)
     var y = e.gesture.touches[0].pageY - $(canvas).offset().top;
     console.log(deltaTime + ": " + x + "," + y + " source: " + source + " target " + target);
@@ -102,6 +97,7 @@ angular.module('starter', ['ionic'])
       clicksX.push(x);
       clicksY.push(y);
 
+      // draw a circle to indicate to select path
       context.beginPath();
       context.arc(x, y, 4, 0, 2*Math.PI);
       context.fillStyle = 'green';
