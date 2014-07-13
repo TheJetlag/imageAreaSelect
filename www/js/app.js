@@ -41,6 +41,11 @@ angular.module('starter', ['ionic'])
     var imageWidth = this.width;
 
     var scale = viewportWidth / imageWidth;
+    // look if we have to downscale the image
+    var scale = 1;
+    if (viewportWidth < imageWidth) {
+      scale = viewportWidth / imageWidth;
+    }
 
     var newImageWidth = Math.floor(imageWidth * scale);
     var newImageHeight = Math.floor(imageHeight * scale);
