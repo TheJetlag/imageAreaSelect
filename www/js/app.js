@@ -113,7 +113,7 @@ angular.module('starter', ['ionic'])
     // get the resized image from the canvas and use it as the src for the target
     var genimg = new Image();
     genimg.id = "genimg"
-    genimg.src = canvas.toDataURL();
+    genimg.src = restoreableImg;
     $(".clipParent").prepend(genimg);
 
     var arr = [];
