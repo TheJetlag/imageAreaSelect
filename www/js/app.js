@@ -25,8 +25,6 @@ angular.module('starter', ['ionic'])
 
   var canvasDiv = document.getElementById('canvasDiv');
   var canvas = document.createElement('canvas');
-  canvas.setAttribute('width', 500);
-  canvas.setAttribute('height', 500);
   canvas.setAttribute('id', 'canvas');
   $(canvasDiv).prepend(canvas);
 
