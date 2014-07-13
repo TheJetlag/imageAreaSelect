@@ -80,6 +80,8 @@ angular.module('starter', ['ionic'])
     //detect if this is a new drag
     if (lastDeltaTime > deltaTime) {
       // new drag, restore the originall image
+      clicksX = new Array();
+      clicksY = new Array();
       restoreImage();
     }
 
