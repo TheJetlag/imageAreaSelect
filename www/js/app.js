@@ -31,6 +31,7 @@ angular.module('starter', ['ionic'])
   $(canvasDiv).prepend(canvas);
 
 	var context = canvas.getContext('2d');
+  var restoreableImg;
 	var imageObj = new Image();
 
 	imageObj.onload = function() {
@@ -55,9 +56,20 @@ angular.module('starter', ['ionic'])
 
     // draw the image scaled on the canvas
     context.drawImage(imageObj, 0, 0, newImageWidth, newImageHeight);
+    restoreableImg = canvas.toDataURL();
 	};
 
   imageObj.src = getPhoneGapPath() + '/img/darth-vader.jpg';
+
+
+  var restoreImage = function() {
+    var img = new Image();
+    img.onload = function () {
+      context.drawImage(img, 0, 0);
+    };
+    img.src = restoreableImg;
+  }
+
 
   var lastDeltaTime = 0;
 
@@ -68,14 +80,13 @@ angular.module('starter', ['ionic'])
     //detect if this is a new drag
     if (lastDeltaTime > deltaTime) {
       // new drag, restore the originall image
-
+      restoreImage();
     }
 
     lastDeltaTime = deltaTime;
 
     var target = e.target.id;
     var source = e.srcElement.id;
-
 
     var x = e.gesture.touches[0].pageX - $(canvas).offset().left; // so we get the position inside the canvas (not of the whole screen)
     var y = e.gesture.touches[0].pageY - $(canvas).offset().top;
