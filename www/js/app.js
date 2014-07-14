@@ -72,8 +72,11 @@ angular.module('starter', ['ionic'])
     img.src = restoreableImg;
   }
 
+
   // draggin
   var lastDeltaTime = 0;
+  var lastX = -1;
+  var lastY = -1;
   $ionicGesture.on('drag', function(e) {
     var deltaTime = e.gesture.deltaTime;
 
@@ -90,20 +93,23 @@ angular.module('starter', ['ionic'])
     var source = e.srcElement.id;
     var x = e.gesture.touches[0].pageX - $(canvas).offset().left; // so we get the position inside the canvas (not of the whole screen)
     var y = e.gesture.touches[0].pageY - $(canvas).offset().top;
-    console.log(deltaTime + ": " + x + "," + y + " source: " + source + " target " + target);
+    //console.log(deltaTime + ": " + x + "," + y + " source: " + source + " target " + target);
 
     if(target === "canvas" && source === "canvas") {
-		  // add coordinates into array
+      // add coordinates into array
       clicksX.push(x);
       clicksY.push(y);
 
-      // draw a circle to indicate to select path
-      context.beginPath();
-      context.arc(x, y, 4, 0, 2*Math.PI);
-      context.fillStyle = 'green';
-      context.fill();
-      context.strokeStyle = '#003300';
-      context.stroke();
+      if (lastX != -1 && lastY != -1) {
+          context.beginPath();
+          context.moveTo(lastX,lastY);
+          context.lineTo(x,y);
+          context.lineWidth = 3;
+          context.strokeStyle = 'green';
+          context.stroke();
+      }
+      lastX = x;
+      lastY = y;
     }
   }, $(canvasDiv));
 
