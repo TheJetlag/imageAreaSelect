@@ -32,6 +32,9 @@ angular.module('starter', ['ionic'])
   var restoreableImg;
 	var imageObj = new Image();
 
+  var newImageWidth = -1;
+  var newImageHeight = -1;
+
 	imageObj.onload = function() {
     // here we scale the image to fit in the screen
     var viewportHeight = $(window).height();
@@ -47,8 +50,8 @@ angular.module('starter', ['ionic'])
     }
 
     // downscale the image by the calculated factor
-    var newImageWidth = Math.floor(imageWidth * scale);
-    var newImageHeight = Math.floor(imageHeight * scale);
+    newImageWidth = Math.floor(imageWidth * scale);
+    newImageHeight = Math.floor(imageHeight * scale);
 
     // also downscale the canvasDiv
     $(canvasDiv).css("width", newImageWidth+"px");
@@ -85,6 +88,8 @@ angular.module('starter', ['ionic'])
       // new drag, restore the originall image and resete click coordienates arrays
       clicksX = new Array();
       clicksY = new Array();
+      lastX = -1;
+      lastY = -1;
       restoreImage();
     }
     lastDeltaTime = deltaTime;
@@ -95,25 +100,44 @@ angular.module('starter', ['ionic'])
     var y = e.gesture.touches[0].pageY - $(canvas).offset().top;
     //console.log(deltaTime + ": " + x + "," + y + " source: " + source + " target " + target);
 
-    if(target === "canvas" && source === "canvas") {
+    if (target === "canvas" && source === "canvas") {
       // add coordinates into array
       clicksX.push(x);
       clicksY.push(y);
 
+      // check if we already have a lastX and lastY, then draw lines
       if (lastX != -1 && lastY != -1) {
-          context.beginPath();
-          context.moveTo(lastX,lastY);
-          context.lineTo(x,y);
-          context.lineWidth = 3;
-          context.strokeStyle = 'green';
-          context.stroke();
+        context.beginPath();
+        context.moveTo(lastX,lastY);
+        context.lineTo(x,y);
+        context.lineWidth = 3;
+        context.strokeStyle = 'green';
+        context.stroke();
       }
       lastX = x;
       lastY = y;
     }
   }, $(canvasDiv));
 
-  $scope.extractArea = function() {
+  //drag end, user released his finger
+  $ionicGesture.on('release', function(e) {
+    extractArea();
+
+    // darken the original image
+    context.fillStyle = "rgba(0, 0, 0, 0.6)";
+    context.fillRect(0, 0, newImageWidth, newImageHeight);
+
+    //set the sliced area above the orignal image (canvas)
+    var top = $('#canvasDiv').offset().top;
+    $('.clipParent').css({
+      "display" : "block",
+      "top" : top-43,
+      "position": "fixed",
+      "left" : 0,
+    });
+  }, $(canvasDiv));
+
+  var extractArea = function() {
     $(".clipParent").empty();
 
     // get the resized image from the canvas and use it as the src for the target
@@ -122,10 +146,10 @@ angular.module('starter', ['ionic'])
     genimg.src = restoreableImg;
     $(".clipParent").prepend(genimg);
 
+    // build up the polyclip attribute
     var arr = [];
-    for(var i=0; i < clicksX.length; i++){
-    	arr.push(clicksX[i]);
-    	arr.push(clicksY[i]);
+    for (var i=0; i < clicksX.length; i++) {
+    	arr.push(clicksX[i]); arr.push(clicksY[i]);
     }
     $("#genimg")[0].setAttribute("data-polyclip", arr.join(", "));
     polyClip.init();
@@ -133,7 +157,7 @@ angular.module('starter', ['ionic'])
 });
 
 function getPhoneGapPath() {
-    if(document.URL.indexOf( 'http://' ) === -1) {
+    if (document.URL.indexOf( 'http://' ) === -1) {
       var path = window.location.pathname;
       path = path.substr( 0, path.length - 10 );
       return 'file://' + path;
