@@ -34,11 +34,14 @@
     <ion-content>
       <div data-tap-disabled="true" id="canvasDiv"></div>
       <br>
-      <button ng-click="extractArea()" class="button button-energized">
-		  Extract area
+      <button ng-click="confirm()" class="button button-positive">
+		    Use this area
 		  </button>
-
-      <div class="clipParent"></div>
+      <button ng-click="repick()" class="button">
+        Repick
+      </button>
+      <!-- here we are going to render the selected area into -->
+      <div data-tap-disabled="true" class="clipParent" style="display: none;"></div>
     </ion-content>
   </body>
 </html>
