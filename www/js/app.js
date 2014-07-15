@@ -65,7 +65,7 @@ angular.module('starter', ['ionic'])
     restoreableImg = canvas.toDataURL();
 	};
 
-  imageObj.src = getPhoneGapPath() + '/img/darth-vader.jpg';
+  imageObj.src = getPhoneGapPath() + '/img/kitty.jpg';
 
   var restoreImage = function() {
     var img = new Image();
