@@ -68,6 +68,19 @@ angular.module('starter', ['ionic'])
   imageObj.src = getPhoneGapPath() + '/img/kitty.jpg';
 
   var restoreImage = function() {
+    // reset variables
+    clicksX = new Array();
+    clicksY = new Array();
+    lastX = -1;
+    lastY = -1;
+
+    $('.clipParent').css({
+      "display" : "none",
+      "top" : top-43,
+      "position": "fixed",
+      "left" : 0,
+    });
+
     var img = new Image();
     img.onload = function () {
       context.drawImage(img, 0, 0);
@@ -86,10 +99,7 @@ angular.module('starter', ['ionic'])
     //detect if this is a new drag
     if (lastDeltaTime > deltaTime) {
       // new drag, restore the originall image and resete click coordienates arrays
-      clicksX = new Array();
-      clicksY = new Array();
-      lastX = -1;
-      lastY = -1;
+
       restoreImage();
     }
     lastDeltaTime = deltaTime;
@@ -154,6 +164,11 @@ angular.module('starter', ['ionic'])
     $("#genimg")[0].setAttribute("data-polyclip", arr.join(", "));
     polyClip.init();
   }
+
+  $scope.repick = function() {
+    restoreImage();
+  }
+
 });
 
 function getPhoneGapPath() {
